@@ -3,6 +3,10 @@ import Card from 'Components/Card/Card';
 import styled from 'styled-components';
 import { ModalContext } from 'HOC/GlobalModalProvider';
 import EditCard from 'Components/ModalContent/EditCard';
+import { useSelector } from 'react-redux';
+import { cardListSelector } from '../../store/selectors/cardList';
+import { useDispatch } from 'react-redux';
+import { replaceCardList } from '../../store/actions/cardList';
 
 const StyledTaskList = styled.div`
   display: flex;
@@ -22,7 +26,8 @@ const StyledLoadingWrapper = styled.div`
 `;
 
 const TaskList = (props) => {
-  const [cardList, setCardList] = useState(null);
+  const cardList = useSelector(cardListSelector);
+  const dispatch = useDispatch();
 
   const openModal = useContext(ModalContext);
 
@@ -35,7 +40,7 @@ const TaskList = (props) => {
         deleteCard={() => {
           const newCardList = [...cardList];
           newCardList.splice(cardIndex, 1);
-          setCardList(newCardList);
+          dispatch(replaceCardList(newCardList));
         }}
         setModal={openModal}
       />
@@ -44,13 +49,15 @@ const TaskList = (props) => {
 
   useEffect(() => {
     setTimeout(() => {
-      setCardList([
-        { cardName: 'Name 1', cardText: 'card text', id: 1 },
-        { cardName: 'Name 2', cardText: 'card text', id: 2 },
-        { cardName: 'Name 3', cardText: 'card text', id: 3 },
-        { cardName: 'Name 4', cardText: 'card text', id: 4 },
-        { cardName: 'Name 5', cardText: 'card text', id: 5 },
-      ]);
+      dispatch(
+        replaceCardList([
+          { cardName: 'Name 1', cardText: 'card text', id: 1 },
+          { cardName: 'Name 2', cardText: 'card text', id: 2 },
+          { cardName: 'Name 3', cardText: 'card text', id: 3 },
+          { cardName: 'Name 4', cardText: 'card text', id: 4 },
+          { cardName: 'Name 5', cardText: 'card text', id: 5 },
+        ])
+      );
     }, 1000);
   }, []);
 
